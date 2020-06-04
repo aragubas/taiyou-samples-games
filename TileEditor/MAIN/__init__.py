@@ -18,8 +18,8 @@ def Initialize(DISPLAY):
     global CurrentFileName
     # -- Initialize Screens -- #
     menuScreen.Initialize(DISPLAY)
-    Messages.append("SET_FPS:0")
-    Messages.append("RESIZIABLE_WINDOW:False")
+    Messages.append("SET_FPS:60")
+    Messages.append("RESIZIABLE_WINDOW:True")
 
 def GameDraw(DISPLAY):
     global CurrentScreen
@@ -31,8 +31,6 @@ def GameDraw(DISPLAY):
         menuScreen.GameDraw(DISPLAY)
     if CurrentScreen == 1:
         editorScreen.GameDraw(DISPLAY)
-
-    pygame.display.update()
 
 def EventUpdate(event):
     global Cursor_Position

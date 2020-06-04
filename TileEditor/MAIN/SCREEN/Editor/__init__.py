@@ -4,7 +4,6 @@ import pygame
 from TileEditor.MAIN import HUD as hud
 from math import *
 import TileEditor.MAIN as mainScript
-import ENGINE as tge
 
 MapData = list()
 Cursor_MapX = 0
@@ -14,6 +13,8 @@ Map_Y = 0
 Map_SizeW = 32
 Map_SizeH = 32
 Map_TileSize = 32
+Viewport_TilesW = 25
+Viewport_TilesH = 17
 CurrentSelectedTile = 0
 CurrentTileSet = 0
 MouseIsHeldDown = False
@@ -88,7 +89,7 @@ def SaveMapData():
     global CurrentMessage
 
     try:
-        f = open(tge.Get_GameSourceFolder() + "maps/" + mainScript.CurrentFileName, 'w')
+        f = open(mainScript.CurrentFileName, 'w')
         f.write("; -- MAP INFO -- ;\ntileset:" + str(CurrentTileSet) + "\n")
         f.write("tile_size:" + str(Map_TileSize) + "\n")
         f.write("map_width:" + str(Map_SizeW) + "\n")
@@ -102,8 +103,8 @@ def SaveMapData():
 
         f.write("# - END MAP DATA -- #")
 
-        f.close()
-        CurrentMessage = reg.ReadKeyWithTry("/lang/msg_map_saved", "Map Saved.")
+        f.close()  # you can omit in most cases as the destructor will call it
+        CurrentMessage = "Map Saved."
     except Exception as ex:
         CurrentMessage = str(ex)
         print("Error while saving Map-Data:\n" + str(ex))
@@ -112,14 +113,16 @@ def GameDraw(DISPLAY):
     global Map_SizeH
     global Map_SizeW
     global Map_TileSize
+    global Viewport_TilesW
+    global Viewport_TilesH
     global MapTilesOffset
 
-    for x, row in enumerate(MapData):
-        for y, data in enumerate(row):
+    for x in range(Viewport_TilesW):
+        for y in range(Viewport_TilesH):
             try:
-                sprite.Render(DISPLAY, "/{0}/{1}.png".format(str(CurrentTileSet), MapData[Map_X + x][Map_Y + y]), x * Map_TileSize, y * Map_TileSize, Map_TileSize, Map_TileSize)
+                sprite.Render(DISPLAY, "/{0}/{1}.png".format(str(CurrentTileSet), MapData[Map_X + x][Map_Y + y]), x * Map_TileSize,y * Map_TileSize,Map_TileSize - MapTilesOffset,Map_TileSize - MapTilesOffset)
             except:
-                sprite.RenderRectangle(DISPLAY, (0, 0, 0), (x * Map_TileSize, y * Map_TileSize, Map_TileSize, Map_TileSize))
+                sprite.RenderRectangle(DISPLAY, (0,0,0), (x * Map_TileSize, y * Map_TileSize, Map_TileSize, Map_TileSize))
 
     # -- Draw the Selector -- #
     hud.Draw_Panel(DISPLAY, (floor(mainScript.Cursor_Position[0] / Map_TileSize) * Map_TileSize, floor(mainScript.Cursor_Position[1] / Map_TileSize) * Map_TileSize, Map_TileSize, Map_TileSize), (0,0,0,20))
@@ -144,7 +147,7 @@ def RenderHUD(DISPLAY):
     sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 10, CurrentMessage, (240, 240, 240), DISPLAY.get_width() - sprite.GetText_width("/PressStart2P.ttf", 10, CurrentMessage) - 10, HUD_Y + 5)
 
     # -- Render Tips Text
-    TipsText = reg.ReadKeyWithTry("lang/editor_help_text", "W,A,S,D Move; Q,E Tile; Z,C Tileset; X,N Save/New; V Grid; MouseWheel Tilesize; ESC Back")
+    TipsText = "W,A,S,D Move; Q,E Tile; Z,C Tileset; X,N Save/New, I,J,K,L Viewport Size; V Grid; MouseWheel Tilesize; ESC Back"
     sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 7, TipsText, (240, 240, 240), DISPLAY.get_width() - sprite.GetText_width("/PressStart2P.ttf", 7, TipsText) - 10, HUD_Y + 45)
 
 
@@ -169,6 +172,28 @@ def EventUpdate(event):
             CurrentSelectedTile -= 1
     if event.type == pygame.KEYUP and event.key == pygame.K_e:
         CurrentSelectedTile += 1
+
+    # -- Change Viewport Size -- #
+    if event.type == pygame.KEYUP and event.key == pygame.K_j:
+        if Viewport_TilesW > 16:
+            Viewport_TilesW -= 1
+        else:
+            CurrentMessage = "Viewport Width cannot be\nlower than 16."
+    if event.type == pygame.KEYUP and event.key == pygame.K_l:
+        if Viewport_TilesW < Map_SizeW:
+            Viewport_TilesW += 1
+        else:
+            CurrentMessage = "Viewport Width cannot be\nhigher than map width."
+    if event.type == pygame.KEYUP and event.key == pygame.K_k:
+        if Viewport_TilesH < Map_SizeH:
+            Viewport_TilesH += 1
+        else:
+            CurrentMessage = "Viewport Height cannot be\nhigher than map height."
+    if event.type == pygame.KEYUP and event.key == pygame.K_i:
+        if Viewport_TilesH > 16:
+            Viewport_TilesH -= 1
+        else:
+            CurrentMessage = "Viewport Height cannot be\nlower than 16.."
 
     # -- Change the Selected Tileset -- #
     if event.type == pygame.KEYUP and event.key == pygame.K_z:
@@ -212,7 +237,7 @@ def NewMap():
     global CurrentMessage
     w, h = Map_SizeW, Map_SizeH;
     MapData = [[0 for x in range(w)] for y in range(h)]
-    CurrentMessage = reg.ReadKeyWithTry("/lang/msg_new_map", "New Map")
+    CurrentMessage = "New Map"
 
 def Update():
     global Cursor_MapX
@@ -250,7 +275,7 @@ def Update():
     if MouseIsHeldDown:
         try:
             MapData[Cursor_MapX][Cursor_MapY] = CurrentSelectedTile
-            CurrentMessage = "x:{0}, y:{1}] = {2}".format(str(Cursor_MapX), str(Cursor_MapY), str(CurrentSelectedTile))
+            CurrentMessage = "Tile[{0},{1}] = {2}".format(str(Cursor_MapX), str(Cursor_MapY), str(CurrentSelectedTile))
         except:
-            CurrentMessage = reg.ReadKeyWithTry("/lang/msg_tiles_outside_map", "Tiles cannot be placed outside\nthe map.")
+            CurrentMessage = "Tiles cannot be place outside\nthe map."
 

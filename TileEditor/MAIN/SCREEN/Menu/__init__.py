@@ -1,10 +1,9 @@
+import pygame
 from ENGINE import sprite as sprite
-import TileEditor.MAIN as mainScript
 import TileEditor.MAIN.HUD as hud
+import TileEditor.MAIN as mainScript
 import TileEditor.MAIN.SCREEN.Editor as editorScreen
 import TileEditor.MAIN.Window.Properties as propsWindow
-from ENGINE import REGISTRY as reg
-from ENGINE import sprite as sprite
 
 LoadMapButton = hud.Button
 NewMapButton = hud.Button
@@ -15,9 +14,9 @@ def Initialize(DISPLAY):
     global LoadMapButton
     global NewMapButton
     global FilenameTextbox
-    LoadMapButton = hud.Button((5,5,5,5), reg.ReadKeyWithTry("lang/btn_load_map","Load Map"), 18)
-    NewMapButton = hud.Button((5,5,5,5), reg.ReadKeyWithTry("lang/btn_new_map","New Map"), 18)
-    FilenameTextbox = hud.InputBox(0,0,200,30, reg.ReadKeyWithTry("last_map","Map"))
+    LoadMapButton = hud.Button((5,5,5,5), "Load Map", 18)
+    NewMapButton = hud.Button((5,5,5,5), "New Map", 18)
+    FilenameTextbox = hud.InputBox(0,0,200,30, "Map.txt")
     propsWindow.Initialize()
 
 def Update():
@@ -52,12 +51,12 @@ def GameDraw(DISPLAY):
     global NewMapButton
     global FilenameTextbox
     global PropertiesWindowEnabled
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 38, reg.ReadKeyWithTry("/app_title", "Tile Editor"), (240,240,240), DISPLAY.get_width() / 2 - sprite.GetText_width("/PressStart2P.ttf", 38, reg.ReadKeyWithTry("/app_title", "Tile Editor")) / 2,25)
+    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 38, "Tile Editor", (240,240,240), DISPLAY.get_width() / 2 - sprite.GetText_width("/PressStart2P.ttf", 38, "Tile Editor") / 2,25)
 
     LoadMapButton.Render(DISPLAY)
     NewMapButton.Render(DISPLAY)
 
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 14, reg.ReadKeyWithTry("/lang/map_name", "Map Name:"), (240, 240, 240), FilenameTextbox.rect[0], FilenameTextbox.rect[1] - 20)
+    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 14, "Map Name:", (240, 240, 240), FilenameTextbox.rect[0], FilenameTextbox.rect[1] - 20)
 
     FilenameTextbox.Render(DISPLAY)
 

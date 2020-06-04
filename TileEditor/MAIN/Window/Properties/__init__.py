@@ -4,7 +4,6 @@ import TileEditor.MAIN.SCREEN.Menu as menuScreen
 import TileEditor.MAIN.SCREEN.Editor as editorScreen
 import TileEditor.MAIN.HUD as hud
 from ENGINE import sprite as sprite
-from ENGINE import REGISTRY as reg
 
 WindowObject = hud.Window
 WindowSurface = pygame.Surface
@@ -20,8 +19,7 @@ def Initialize():
     global MapHeightInput
     global CreateMapButton
     global MapTileSizeInput
-    print("PropertiesWindows : Initializing Controls...")
-    WindowObject = hud.Window(pygame.Rect(50,50,350,250), reg.ReadKeyWithTry("lang/window_map_props","Map Properties"), False)
+    WindowObject = hud.Window(pygame.Rect(50,50,350,250), "Map Properties", False)
     WindowObject.Minimizable = False
     MapWidthInput = hud.InputBox(5,50,150,18,"64")
     MapHeightInput = hud.InputBox(5,80,150, 18, "64")
@@ -32,7 +30,6 @@ def Initialize():
     MapHeightInput.CustomColision = True
     CreateMapButton.CustomColisionRectangle = True
     MapTileSizeInput.CustomColision = True
-    print("PropertiesWindow : Done.")
 
 def Render(DISPLAY):
     global WindowObject
@@ -44,19 +41,19 @@ def Render(DISPLAY):
     WindowSurface = WindowObject.WindowSurface
 
     # -- Map Size Category -- #
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 18, reg.ReadKeyWithTry("lang/map_dimensions", "Map Dimensions"), (240,240,240), 15, 7)
+    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 18, "Map Dimensions", (240,240,240), 15, 7)
 
     # -- Render the Width Textbox -- #
     MapWidthInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, reg.ReadKeyWithTry("lang/map_width", "Width"), (240,240,240), 5, 35)
+    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Width", (240,240,240), 5, 35)
 
     # -- Render Height Textbox -- #
     MapHeightInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, reg.ReadKeyWithTry("lang/map_height", "Height"), (240,240,240), 5, 65)
+    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Height", (240,240,240), 5, 65)
 
     # -- Render Tile Size -- #
     MapTileSizeInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, reg.ReadKeyWithTry("lang/map_tile_size", "Tile Size:"), (240,240,240), 5, 95)
+    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Tile", (240,240,240), 5, 95)
 
 
     # -- Render Create Map Button -- #
