@@ -51,12 +51,12 @@ def GameDraw(DISPLAY):
     global NewMapButton
     global FilenameTextbox
     global PropertiesWindowEnabled
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 38, "Tile Editor", (240,240,240), DISPLAY.get_width() / 2 - sprite.GetText_width("/PressStart2P.ttf", 38, "Tile Editor") / 2,25)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 38, "Tile Editor", (240, 240, 240), DISPLAY.get_width() / 2 - sprite.GetFont_width("/PressStart2P.ttf", 38, "Tile Editor") / 2, 25)
 
     LoadMapButton.Render(DISPLAY)
     NewMapButton.Render(DISPLAY)
 
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 14, "Map Name:", (240, 240, 240), FilenameTextbox.rect[0], FilenameTextbox.rect[1] - 20)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 14, "Map Name:", (240, 240, 240), FilenameTextbox.rect[0], FilenameTextbox.rect[1] - 20)
 
     FilenameTextbox.Render(DISPLAY)
 

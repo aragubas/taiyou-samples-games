@@ -4,6 +4,7 @@ import pygame
 from TileEditor.MAIN import HUD as hud
 from math import *
 import TileEditor.MAIN as mainScript
+import ENGINE as tge
 
 MapData = list()
 Cursor_MapX = 0
@@ -30,7 +31,7 @@ def LoadMapData():
     global CurrentMessage
 
     try:
-        f = open(mainScript.CurrentFileName, "r")
+        f = open(tge.Get_GlobalAppDataFolder() + mainScript.CurrentFileName, "r")
 
         IsInitializationLines = True
         InfosLoaded = 0
@@ -89,7 +90,7 @@ def SaveMapData():
     global CurrentMessage
 
     try:
-        f = open(mainScript.CurrentFileName, 'w')
+        f = open(tge.Get_GlobalAppDataFolder() + mainScript.CurrentFileName, 'w')
         f.write("; -- MAP INFO -- ;\ntileset:" + str(CurrentTileSet) + "\n")
         f.write("tile_size:" + str(Map_TileSize) + "\n")
         f.write("map_width:" + str(Map_SizeW) + "\n")
@@ -120,9 +121,9 @@ def GameDraw(DISPLAY):
     for x in range(Viewport_TilesW):
         for y in range(Viewport_TilesH):
             try:
-                sprite.Render(DISPLAY, "/{0}/{1}.png".format(str(CurrentTileSet), MapData[Map_X + x][Map_Y + y]), x * Map_TileSize,y * Map_TileSize,Map_TileSize - MapTilesOffset,Map_TileSize - MapTilesOffset)
+                sprite.ImageRender(DISPLAY, "/{0}/{1}.png".format(str(CurrentTileSet), MapData[Map_X + x][Map_Y + y]), x * Map_TileSize, y * Map_TileSize, Map_TileSize - MapTilesOffset, Map_TileSize - MapTilesOffset)
             except:
-                sprite.RenderRectangle(DISPLAY, (0,0,0), (x * Map_TileSize, y * Map_TileSize, Map_TileSize, Map_TileSize))
+                sprite.Shape_Rectangle(DISPLAY, (0, 0, 0), (x * Map_TileSize, y * Map_TileSize, Map_TileSize, Map_TileSize))
 
     # -- Draw the Selector -- #
     hud.Draw_Panel(DISPLAY, (floor(mainScript.Cursor_Position[0] / Map_TileSize) * Map_TileSize, floor(mainScript.Cursor_Position[1] / Map_TileSize) * Map_TileSize, Map_TileSize, Map_TileSize), (0,0,0,20))
@@ -136,19 +137,19 @@ def RenderHUD(DISPLAY):
     HUD_Y = DISPLAY.get_height() - 55
 
     # -- Render Location Infos.
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 10, "Cursor[{0}, {1}]\nMap[{2}, {3}, {5}, {6}]\nTile[Tile:{4}]".format(str(Cursor_MapX), str(Cursor_MapY), str(Map_X), str(Map_Y), str(Map_TileSize), str(Map_SizeW), str(Map_SizeH)), (255, 255, 255), 10, HUD_Y + 5, True)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 10, "Cursor[{0}, {1}]\nMap[{2}, {3}, {5}, {6}]\nTile[Tile:{4}]".format(str(Cursor_MapX), str(Cursor_MapY), str(Map_X), str(Map_Y), str(Map_TileSize), str(Map_SizeW), str(Map_SizeH)), (255, 255, 255), 10, HUD_Y + 5, True)
 
     # -- Render Selected Tile Number
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 10, "Tile: {0}\nSet: {1}".format(str(CurrentSelectedTile), str(CurrentTileSet)), (255, 255, 255), 280, HUD_Y + 5, True)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 10, "Tile: {0}\nSet: {1}".format(str(CurrentSelectedTile), str(CurrentTileSet)), (255, 255, 255), 280, HUD_Y + 5, True)
     # -- Render Selected Tile Text
-    sprite.Render(DISPLAY, "/{0}/{1}.png".format(CurrentTileSet, CurrentSelectedTile), 380, HUD_Y + 2, 32, 32)
+    sprite.ImageRender(DISPLAY, "/{0}/{1}.png".format(CurrentTileSet, CurrentSelectedTile), 380, HUD_Y + 2, 32, 32)
 
     # -- Render Current Message
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 10, CurrentMessage, (240, 240, 240), DISPLAY.get_width() - sprite.GetText_width("/PressStart2P.ttf", 10, CurrentMessage) - 10, HUD_Y + 5)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 10, CurrentMessage, (240, 240, 240), DISPLAY.get_width() - sprite.GetFont_width("/PressStart2P.ttf", 10, CurrentMessage) - 10, HUD_Y + 5)
 
     # -- Render Tips Text
     TipsText = "W,A,S,D Move; Q,E Tile; Z,C Tileset; X,N Save/New, I,J,K,L Viewport Size; V Grid; MouseWheel Tilesize; ESC Back"
-    sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 7, TipsText, (240, 240, 240), DISPLAY.get_width() - sprite.GetText_width("/PressStart2P.ttf", 7, TipsText) - 10, HUD_Y + 45)
+    sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 7, TipsText, (240, 240, 240), DISPLAY.get_width() - sprite.GetFont_width("/PressStart2P.ttf", 7, TipsText) - 10, HUD_Y + 45)
 
 
 def EventUpdate(event):

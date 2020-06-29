@@ -53,9 +53,9 @@ class InputBox:
     def Render(self, screen):
         # -- Resize the Textbox -- #
         try:
-            width = max(100, sprite.GetText_width("/PressStart2P.ttf", 10, self.text)+10)
+            width = max(100, sprite.GetFont_width("/PressStart2P.ttf", 10, self.text) + 10)
             self.rect.w = width
-            self.rect.h = sprite.GetText_height("/PressStart2P.ttf", 10, self.text)
+            self.rect.h = sprite.GetFont_height("/PressStart2P.ttf", 10, self.text)
             self.LastHeight = self.rect.h
         except:
             self.rect.w = 100
@@ -65,18 +65,18 @@ class InputBox:
             self.colisionRect = self.rect
 
         # Blit the rect.
-        sprite.RenderRectangle(screen, self.color, self.rect)
-        sprite.RenderRectangle(screen, self.color, self.rect)
+        sprite.Shape_Rectangle(screen, self.color, self.rect)
+        sprite.Shape_Rectangle(screen, self.color, self.rect)
 
         if self.text == self.DefaultText:
-            sprite.RenderFont(screen, "/PressStart2P.ttf", 10, self.text, (140,140,140), self.rect[0],self.rect[1])
+            sprite.FontRender(screen, "/PressStart2P.ttf", 10, self.text, (140, 140, 140), self.rect[0], self.rect[1])
         else:
-            sprite.RenderFont(screen, "/PressStart2P.ttf", 10, self.text, (240, 240, 240), self.rect[0], self.rect[1])
+            sprite.FontRender(screen, "/PressStart2P.ttf", 10, self.text, (240, 240, 240), self.rect[0], self.rect[1])
 
         if not self.active:
-            sprite.RenderRectangle(screen, (255, 51, 102), (self.rect[0],self.rect[1] - 1,self.rect[2], 1))
+            sprite.Shape_Rectangle(screen, (255, 51, 102), (self.rect[0], self.rect[1] - 1, self.rect[2], 1))
         else:
-            sprite.RenderRectangle(screen, (46, 196, 182), (self.rect[0],self.rect[1] - 1,self.rect[2], 1))
+            sprite.Shape_Rectangle(screen, (46, 196, 182), (self.rect[0], self.rect[1] - 1, self.rect[2], 1))
 
 
 class Button:
@@ -88,9 +88,9 @@ class Button:
         self.IsButtonEnabled = True
         self.WhiteButton = False
         self.Rectangle = pygame.rect.Rect(self.Rectangle[0], self.Rectangle[1],
-                                          sprite.GetText_width("/PressStart2P.ttf", self.TextSize,
+                                          sprite.GetFont_width("/PressStart2P.ttf", self.TextSize,
                                                                self.ButtonText) + 5,
-                                          sprite.GetText_height("/PressStart2P.ttf", self.TextSize,
+                                          sprite.GetFont_height("/PressStart2P.ttf", self.TextSize,
                                                                 self.ButtonText) + 3)
         self.CursorSettedToggle = False
         self.ButtonDowed = False
@@ -127,9 +127,9 @@ class Button:
 
         if not self.WhiteButton:
             self.Rectangle = pygame.rect.Rect(self.Rectangle[0], self.Rectangle[1],
-                                              sprite.GetText_width("/PressStart2P.ttf", self.TextSize,
+                                              sprite.GetFont_width("/PressStart2P.ttf", self.TextSize,
                                                                    self.ButtonText) + 5,
-                                              sprite.GetText_height("/PressStart2P.ttf", self.TextSize,
+                                              sprite.GetFont_height("/PressStart2P.ttf", self.TextSize,
                                                                     self.ButtonText) + 3)
 
     def Set_X(self, Value):
@@ -163,20 +163,20 @@ class Button:
                 self.BackgroundColor = (1, 22, 39, 50)
 
                 # -- Indicator Bar -- #
-                sprite.RenderRectangle(ButtonSurface, (255, 51, 102), (0, 0, self.Rectangle[2],1))
+                sprite.Shape_Rectangle(ButtonSurface, (255, 51, 102), (0, 0, self.Rectangle[2], 1))
 
                 # -- Text -- #
-                sprite.RenderFont(ButtonSurface, "/PressStart2P.ttf", self.TextSize, self.ButtonText, (200, 200, 200),
+                sprite.FontRender(ButtonSurface, "/PressStart2P.ttf", self.TextSize, self.ButtonText, (200, 200, 200),
                                   3, 3)
 
             else:
                 # -- Background -- #
                 self.BackgroundColor = (15, 27, 44, 100)
                 # -- Indicator Bar -- #
-                sprite.RenderRectangle(ButtonSurface, (46, 196, 182), (0, 0,self.Rectangle[2],1))
+                sprite.Shape_Rectangle(ButtonSurface, (46, 196, 182), (0, 0, self.Rectangle[2], 1))
 
                 # -- Text -- #
-                sprite.RenderFont(ButtonSurface, "/PressStart2P.ttf", self.TextSize, self.ButtonText, (255, 255, 255),
+                sprite.FontRender(ButtonSurface, "/PressStart2P.ttf", self.TextSize, self.ButtonText, (255, 255, 255),
                                   3, 3)
         else:
             if self.ButtonState == "INATIVE":
@@ -184,13 +184,13 @@ class Button:
                 self.BackgroundColor = (1, 22, 39, 50)
 
                 # -- Indicator Bar -- #
-                sprite.RenderRectangle(ButtonSurface, (255, 51, 102), (0, 0,self.Rectangle[2],4))
+                sprite.Shape_Rectangle(ButtonSurface, (255, 51, 102), (0, 0, self.Rectangle[2], 4))
 
             else:
                 # -- Background -- #
                 self.BackgroundColor = (15, 27, 44, 100)
                 # -- Indicator Bar -- #
-                sprite.RenderRectangle(ButtonSurface, (46, 196, 182), (0, 0, self.Rectangle[2],2))
+                sprite.Shape_Rectangle(ButtonSurface, (46, 196, 182), (0, 0, self.Rectangle[2], 2))
 
         # -- Draw the Button -- #
         DISPLAY.blit(ButtonSurface, (self.Rectangle[0], self.Rectangle[1]))
@@ -267,16 +267,16 @@ class Window:
 
         # -- Draw the Resize Block -- #
         if self.Resiziable:
-            sprite.Render(DISPLAY, "/window/resize.png", self.ResizeRectangle[0], self.ResizeRectangle[1],
-                          self.ResizeRectangle[2], self.ResizeRectangle[3])
+            sprite.ImageRender(DISPLAY, "/window/resize.png", self.ResizeRectangle[0], self.ResizeRectangle[1],
+                               self.ResizeRectangle[2], self.ResizeRectangle[3])
 
         # -- Render the Minimize Button -- #
         if self.Minimizable:
             self.MinimizeButton.Render(DISPLAY)
 
         # -- Draw the window title -- #
-        sprite.RenderFont(DISPLAY, "/PressStart2P.ttf", 18, self.Title, (250, 250, 255),
-                          self.TitleBarRectangle[0] + self.TitleBarRectangle[2] / 2 - sprite.GetText_width(
+        sprite.FontRender(DISPLAY, "/PressStart2P.ttf", 18, self.Title, (250, 250, 255),
+                          self.TitleBarRectangle[0] + self.TitleBarRectangle[2] / 2 - sprite.GetFont_width(
                               "/PressStart2P.ttf", 18, self.Title) / 2, self.TitleBarRectangle[1] + 1)
 
 

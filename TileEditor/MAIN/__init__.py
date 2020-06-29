@@ -5,11 +5,11 @@ from TileEditor.MAIN.SCREEN import Editor as editorScreen
 from TileEditor.MAIN.SCREEN import Menu as menuScreen
 from math import *
 
-# -- Game Engine Messages -- #
+# -- Game Engine Vars -- #
 Messages = list()
 
 DefaultDisplay = pygame.Surface((0,0))
-Cursor_Position = 0,0
+Cursor_Position = 0, 0
 
 CurrentFileName = "Map.txt"
 
@@ -32,6 +32,8 @@ def GameDraw(DISPLAY):
     if CurrentScreen == 1:
         editorScreen.GameDraw(DISPLAY)
 
+    sprite.ImageRender(DISPLAY, "/0.png", Cursor_Position[0], Cursor_Position[1])
+
 def EventUpdate(event):
     global Cursor_Position
     global CurrentScreen
@@ -42,7 +44,6 @@ def EventUpdate(event):
 
     if event.type == pygame.KEYUP and event.key == pygame.K_F5:
         sprite.Reload()
-
 
     if CurrentScreen == 0:
         menuScreen.EventUpdate(event)
@@ -69,4 +70,3 @@ def ReadCurrentMessages():
             return x
     except:
         return ""
-

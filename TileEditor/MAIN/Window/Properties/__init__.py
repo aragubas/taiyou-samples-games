@@ -41,19 +41,19 @@ def Render(DISPLAY):
     WindowSurface = WindowObject.WindowSurface
 
     # -- Map Size Category -- #
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 18, "Map Dimensions", (240,240,240), 15, 7)
+    sprite.FontRender(WindowSurface, "/PressStart2P.ttf", 18, "Map Dimensions", (240, 240, 240), 15, 7)
 
     # -- Render the Width Textbox -- #
     MapWidthInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Width", (240,240,240), 5, 35)
+    sprite.FontRender(WindowSurface, "/PressStart2P.ttf", 12, "Width", (240, 240, 240), 5, 35)
 
     # -- Render Height Textbox -- #
     MapHeightInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Height", (240,240,240), 5, 65)
+    sprite.FontRender(WindowSurface, "/PressStart2P.ttf", 12, "Height", (240, 240, 240), 5, 65)
 
     # -- Render Tile Size -- #
     MapTileSizeInput.Render(WindowSurface)
-    sprite.RenderFont(WindowSurface, "/PressStart2P.ttf", 12, "Tile", (240,240,240), 5, 95)
+    sprite.FontRender(WindowSurface, "/PressStart2P.ttf", 12, "Tile", (240, 240, 240), 5, 95)
 
 
     # -- Render Create Map Button -- #
