@@ -23,6 +23,9 @@ import pygame
 Player = objects.Player
 ColideableObjectCollection = list()
 NichinCollection = list()
+CameraX = 0
+CameraY = 0
+
 
 def Initialize(DISPLAY):
     global Player
@@ -30,10 +33,14 @@ def Initialize(DISPLAY):
     global NichinCollection
 
     Player = objects.Player()
-    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(0, 400, 150, 16)))
+    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(0, 400, 170, 16)))
     ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(240, 350, 100, 16)))
+    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(390, 350, 100, 16)))
+    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(170, 350, 20, 128)))
 
-    NichinCollection.append(objects.Nichin(32, 32))
+    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(0, 0, 16, 400)))
+    ColideableObjectCollection.append(objects.ColideableObject(pygame.Rect(100, 0, 16, 330)))
+
 
 def EventUpdate(event):
     global Player
@@ -49,20 +56,24 @@ def Update():
     # -- Update the ColiableList -- #
     Player.ColideableCollection = ColideableObjectCollection
 
-    for nichin in NichinCollection:
+    for i, nichin in enumerate(NichinCollection):
+        nichin.Index = i
         nichin.Update()
 
 def GameDraw(DISPLAY):
-    DISPLAY.fill((55, 55, 55))
+    DISPLAY.fill((0, 101, 237))
     global Player
     global ColideableObjectCollection
     global NichinCollection
 
-    Player.Render(DISPLAY)
-
+    # -- Render Platforms -- #
     for obj in ColideableObjectCollection:
         obj.Render(DISPLAY)
 
+    # -- Render Player -- #
+    Player.Render(DISPLAY)
+
+    # -- Render Nichin -- #
     for nichin in NichinCollection:
         nichin.Draw(DISPLAY)
 

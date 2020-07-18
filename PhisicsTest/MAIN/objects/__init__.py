@@ -20,6 +20,7 @@ from ENGINE import SPRITE as sprite
 from ENGINE import DEBUGGING as debug
 from PhisicsTest import MAIN as gameMain
 
+
 class Player:
     def __init__(self):
         self.Rectangle = pygame.Rect(64, 16, 32, 32)
@@ -35,10 +36,9 @@ class Player:
         self.JumpAllowed = True
         self.TimesJumped = 0
         self.TimesJumpedMax = 2
-        self.ColideableSelected = None
 
     def Render(self, Surface):
-        sprite.Shape_Rectangle(Surface, (210, 200, 150), self.Rectangle)
+        sprite.Shape_Rectangle(Surface, (120, 50, 75), pygame.Rect(gameMain.CameraX + self.Rectangle[0], gameMain.CameraY + self.Rectangle[1], self.Rectangle[2], self.Rectangle[3]))
 
     def Update(self):
         debug.Set_Parameter("IsInAir", self.IsInAir)
@@ -48,7 +48,10 @@ class Player:
         debug.Set_Parameter("TimesJumpedMax", self.TimesJumpedMax)
         debug.Set_Parameter("JumpAllowed", self.JumpAllowed)
         debug.Set_Parameter("Rectangle", self.Rectangle)
-        debug.Set_Parameter("ColideableSelected", self.ColideableSelected)
+
+        # -- Center Player on Camera -- #
+        gameMain.CameraX = 800 / 2 - (self.Rectangle[0] + self.Rectangle[2])
+        gameMain.CameraY = 600 / 2 - (self.Rectangle[1] + self.Rectangle[3])
 
         # -- if player is jumping -- #
         if self.IsJumping:
@@ -73,20 +76,44 @@ class Player:
             self.Rectangle[1] += self.Gravity
 
         # -- Check Colision -- #
+        ColideablesSelected = list()
         for colideable in self.ColideableCollection:
             if colideable.Rectangle.colliderect(pygame.Rect(self.Rectangle[0], self.Rectangle[1], self.Rectangle[2], self.Rectangle[3])):
-                self.ColideableSelected = colideable
+                ColideablesSelected.append(colideable)
 
-        if not self.ColideableSelected == None:
-            # -- CHeck if Player is coliding -- #
-            if pygame.Rect(self.Rectangle[0], self.Rectangle[1], self.Rectangle[2], self.Rectangle[3] + 1).colliderect(self.ColideableSelected.Rectangle):
+        for colide in ColideablesSelected:
+            LeftColision = False
+            BottomColision = False
+            RightColision = False
+
+            if self.Rectangle[1] + self.Rectangle[3] < colide.Rectangle[1] + colide.Rectangle[3]:
+                BottomColision = True
+
+            if self.Rectangle[0] - self.Rectangle[2] < colide.Rectangle[0] - colide.Rectangle[2]:
+                LeftColision = True
+
+            if self.Rectangle[0] - self.Rectangle[2] < colide.Rectangle[0] + colide.Rectangle[2] and not LeftColision:
+                RightColision = True
+
+            debug.Set_Parameter("LeftColision", LeftColision)
+            debug.Set_Parameter("BottomColision", BottomColision)
+            debug.Set_Parameter("RightColision", RightColision)
+
+            if LeftColision:
+                print("Left Colision")
+                self.Rectangle[0] = (colide.Rectangle[0] + colide.Rectangle[2])
+
+            if RightColision:
+                print("Right Colision")
+                #self.Rectangle[0] = (colide.Rectangle[0] + colide.Rectangle[2])
+
+            if BottomColision:
+                print("Bottom Colision")
                 self.IsInAir = False
-                self.Rectangle = pygame.Rect(self.Rectangle[0], (self.ColideableSelected.Rectangle[1] - self.ColideableSelected.Rectangle[3]) - self.ColideableSelected.Rectangle[3], self.Rectangle[2], self.Rectangle[3])
 
-            else:
-                self.IsInAir = True
-                self.ColideableSelected = None
+        self.IsInAir = len(ColideablesSelected) == 0
 
+        debug.Set_Parameter("ColideablesSelected", len(ColideablesSelected))
 
         # -- Check Keypresses -- #
         if pygame.key.get_pressed()[pygame.K_a]:
@@ -106,7 +133,6 @@ class Player:
 
 
     def EventUpdate(self, event):
-
         # -- Reset Button -- #
         if event.type == pygame.KEYUP and event.key == pygame.K_r:
             self.Rectangle[0] = 64
@@ -129,20 +155,26 @@ class ColideableObject:
         self.Rectangle = rect
 
     def Render(self, Surface):
-        sprite.Shape_Rectangle(Surface, (10, 0, 50), self.Rectangle)
+        sprite.Shape_Rectangle(Surface, (10, 0, 50), pygame.Rect(gameMain.CameraX + self.Rectangle[0], gameMain.CameraY + self.Rectangle[1], self.Rectangle[2], self.Rectangle[3]))
 
 class Nichin:
     def __init__(self, X, Y):
         self.Rectangle = pygame.Rect(X, Y, 5, 5)
         self.NichinMultiplier = 0
+        self.InicialX = X
+        self.ShotDistance = 800
+        self.Index = -1
 
     def Draw(self, Surface):
-        sprite.Shape_Rectangle(Surface, (255, 0, 0), self.Rectangle)
+        sprite.Shape_Rectangle(Surface, (230, 9, 5), pygame.Rect(gameMain.CameraX + self.Rectangle[0], gameMain.CameraY + self.Rectangle[1], self.Rectangle[2], self.Rectangle[3]))
 
     def Update(self):
-        self.NichinMultiplier += 1
+        debug.Set_Parameter("Nichin.Instance:", self)
+        debug.Set_Parameter("Nichin.X", self.Rectangle[0])
+
+        self.NichinMultiplier += 5
 
         self.Rectangle[0] += self.NichinMultiplier
 
-        if self.NichinMultiplier >= 800:
-            del self
+        if self.Rectangle[0] >= self.InicialX + self.ShotDistance:
+            gameMain.NichinCollection.pop(self.Index)
